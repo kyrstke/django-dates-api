@@ -1,15 +1,12 @@
-import json
 import calendar
 import requests
 
 from rest_framework import status
-# from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework.parsers import JSONParser
 
 from django.db.models import Count
-from .models import Date, Month
+from .models import Date
 from .serializers import DateSerializer, MonthSerializer
 
 
@@ -17,13 +14,12 @@ from .serializers import DateSerializer, MonthSerializer
 def get_post_dates(request):
     """
     GET: Returns the list of all dates
-
     POST: Fetches a fact for the date specified in request body from http://numbersapi.com/ and adds the date to the
     database
     """
     if request.method == 'GET':
-        dates = Date.objects.all()
-        serializer = DateSerializer(dates, many=True)
+        possible_duplicate = Date.objects.all()
+        serializer = DateSerializer(possible_duplicate, many=True)
 
         return Response(serializer.data)
 
@@ -31,28 +27,42 @@ def get_post_dates(request):
         month_num = request.data['month']
         day = request.data['day']
 
+        # validate the numbers
         if month_num in range(1, 13) and day in range(1, 32):
             month = calendar.month_name[month_num]
-            fact = requests.get(f'http://numbersapi.com/{month_num}/{day}/date')
-            fact_status = fact.status_code
 
-            if fact_status == 200:
-                date = {
-                    "month": month,
-                    "day": day,
-                    "fact": fact.text
-                }
-                serializer = DateSerializer(data=date)
+            dates = Date.objects.all()
 
-                if serializer.is_valid():  # raise_exception=True
-                    serializer.save()
-                    return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            # check if the date already exists in the database
+            if dates:
+                possible_duplicate = dates.filter(month=month, day=day)
             else:
-                return Response(status=status.HTTP_503_SERVICE_UNAVAILABLE)  # TODO: add an actual error response
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+                possible_duplicate = None
+
+            if not possible_duplicate:
+                fact = requests.get(f'http://numbersapi.com/{month_num}/{day}/date')
+                fact_status = fact.status_code
+
+                if fact_status == 200:
+                    date = {
+                        "month": month,
+                        "day": day,
+                        "fact": fact.text
+                    }
+                    serializer = DateSerializer(data=date)
+
+                    if serializer.is_valid():
+                        serializer.save()
+
+                        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+                return Response(status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
+            return Response(status=status.HTTP_409_CONFLICT)
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
@@ -60,7 +70,6 @@ def get_popular(request):
     """
     Returns the ranking of months present in the database based on the number of
     days that have been checked
-
     """
     months = Date.objects.all().values('month').annotate(days_checked=Count('id')).order_by('-days_checked')
     serializer = MonthSerializer(months, many=True)
@@ -74,11 +83,15 @@ def delete_date(request, pk):
     Delete a selected date
     """
     if request.headers.get("X-API-KEY") == "SECRET_API_KEY":
-        date = Date.objects.get(id=pk)
-        date.delete()
-    else:
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+        date = Date.objects.filter(id=pk)
+        if not date:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            date.delete()
+            return Response(status=status.HTTP_200_OK)
 
-    return Response(status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
 
 

@@ -10,14 +10,9 @@ class Date(models.Model):
         max_length=9
     )
 
-    #     models.IntegerField(
-    #     validators=[
-    #         MinValueValidator(1),
-    #         MaxValueValidator(12)
-    #     ]
-    # )
-
     day = models.IntegerField(
+        blank=False,
+        null=False,
         validators=[
             MinValueValidator(1),
             MaxValueValidator(31)
@@ -32,8 +27,6 @@ class Date(models.Model):
 
 class Month(models.Model):
 
-    id = models.AutoField(primary_key=True)
-
     month = models.CharField(
         blank=False,
         null=False,
@@ -41,6 +34,8 @@ class Month(models.Model):
     )
 
     days_checked = models.IntegerField(
+        blank=False,
+        null=False,
         validators=[
             MinValueValidator(0)
         ]

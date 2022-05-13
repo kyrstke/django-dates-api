@@ -21,5 +21,3 @@ class MonthSerializer(serializers.ModelSerializer):
             'month',
             'days_checked',
         ]
-
-        # ordering = ['days_checked']

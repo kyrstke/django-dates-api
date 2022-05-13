@@ -32,12 +32,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 ALLOWED_HOSTS = ['*']
-#     'localhost',
-#     'localhost:8000',
-#     '127.0.0.1:8000',
-#     'django-dates-api.herokuapp.com'
-# ]
-
 
 # Application definition
 
@@ -51,12 +45,10 @@ INSTALLED_APPS = [
     'api',
     'dates',
     'rest_framework',
-    # 'corsheaders',
     'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [
-    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -72,8 +64,7 @@ ROOT_URLCONF = 'RESTDatesAPI.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -98,7 +89,7 @@ DATABASES = {
         'NAME': 'db',
         'USER': 'postgres',
         'PASSWORD': 'ng-rESTapi',
-        'HOST': 'localhost',
+        'HOST': 'localhost',  # 'db' for Docker
         'PORT': 5432,
     }
 }

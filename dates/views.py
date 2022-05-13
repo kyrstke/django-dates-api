@@ -26,29 +26,17 @@ def get_post_dates(request):
     elif request.method == 'POST':
         print(request.data)
 
-        # r = requests.get(f'http://numbersapi.com/{month}/{day}/date')
-        # r_status = r.status_code
-        # If it is a success
-        # if r_status == 200:
-        #     # convert the json result to python object
-        #     data = json.loads(r.json)
-        #     # Loop through the credentials and save them
-        #     # But it is good to avoid that each user request create new
-        #     # credentials on top of the existing one
-        #     # ( you can retrieve and delete the old one and save the news credentials )
-        #     for c in data:
-        #         credential = Credential(user=self.request.user, value=c)
-        #         credential.save()
-        #     response['status'] = 200
-        #     response['message'] = 'success'
-        #     response['credentials'] = data
-        # else:
-        #     response['status'] = r.status_code
-        #     response['message'] = 'error'
-        #     response['credentials'] = {}
-        # return Response(response)
+        data = request.data
+        month = data['month']
+        day = data['day']
 
-        serializer = DateSerializer(data=request.data)
+        fact = requests.get(f'http://numbersapi.com/{month}/{day}/date')
+        fact_status = fact.status_code
+
+        if fact_status == 200:
+            data["fact"] = fact.text
+
+        serializer = DateSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

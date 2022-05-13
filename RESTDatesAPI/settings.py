@@ -26,12 +26,16 @@ SECRET_KEY = 'django-insecure-g_5s2xb+14n54j-%j%o&j(_16eqi%!u$xz%05r%$h84d1$ez_z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    'localhost',
-    'localhost:8000',
-    '127.0.0.1:8000',
-    'django-dates-api.herokuapp.com'
-]
+# CORS
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
+ALLOWED_HOSTS = ['*']
+#     'localhost',
+#     'localhost:8000',
+#     '127.0.0.1:8000',
+#     'django-dates-api.herokuapp.com'
+# ]
 
 
 # Application definition
@@ -46,6 +50,7 @@ INSTALLED_APPS = [
     'api',
     'dates',
     'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -85,8 +90,12 @@ WSGI_APPLICATION = 'RESTDatesAPI.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'db',
+        'USER': 'postgres',
+        'PASSWORD': 'ng-rESTapi',
+        'HOST': 'localhost',
+        'PORT': 5432,
     }
 }
 

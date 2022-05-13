@@ -26,7 +26,12 @@ SECRET_KEY = 'django-insecure-g_5s2xb+14n54j-%j%o&j(_16eqi%!u$xz%05r%$h84d1$ez_z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['django-dates-api.herokuapp.com']
+ALLOWED_HOSTS = [
+    'localhost',
+    'localhost:8000',
+    '127.0.0.1:8000',
+    'django-dates-api.herokuapp.com'
+]
 
 
 # Application definition
@@ -39,7 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'api',
-    'dates_api',
+    'dates',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

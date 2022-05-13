@@ -13,9 +13,12 @@ class Date(models.Model):
     day = models.IntegerField(
         validators=[
             MinValueValidator(1),
-            MaxValueValidator(12)
+            MaxValueValidator(31)
         ]
     )
 
-    fact = models.TextField(blank=True, null=True)
+    fact = models.TextField(
+        blank=True,
+        null=True
+    )
 

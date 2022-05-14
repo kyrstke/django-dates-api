@@ -31,8 +31,8 @@ I highly recommend using [Postman](https://www.postman.com/downloads/) for sendi
 
 You can make requests to local server as well as to the deployed app on Heroku.
 
-### Local
-Open ```settings.py```, scroll to ```DATABASES = { ...``` and make sure the ```'HOST'``` is set to ```'localhost'```. Then open your command line or terminal in the root folder and run
+### Local (Docker)
+Open ```settings.py```, scroll to ```DATABASES = { ...``` and make sure the ```'HOST'``` is set to ```'localhost'```. Then open your command line or terminal in the root folder and run:
 
 ```docker-compose up```
 

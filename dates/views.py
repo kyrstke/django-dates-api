@@ -5,8 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from django.db.models import Count
-from .models import Date
+from .models import Date, Month
 from .serializers import DateSerializer, MonthSerializer
 
 
@@ -19,11 +18,13 @@ def get_post_dates(request):
     """
     if request.method == 'GET':
         possible_duplicate = Date.objects.all()
-        serializer = DateSerializer(possible_duplicate, many=True)
+        date_serializer = DateSerializer(possible_duplicate, many=True)
 
-        return Response(serializer.data)
+        return Response(date_serializer.data)
 
     elif request.method == 'POST':
+
+        # DATE
         month_num = request.data['month']
         day = request.data['day']
 
@@ -49,14 +50,32 @@ def get_post_dates(request):
                         "day": day,
                         "fact": fact.text
                     }
-                    serializer = DateSerializer(data=date)
 
-                    if serializer.is_valid():
-                        serializer.save()
+                    existing_month = Month.objects.all().filter(month=month)
 
-                        return Response(serializer.data, status=status.HTTP_201_CREATED)
+                    if existing_month:
+                        existing_month[0].days_checked += 1  # possibly [0]
+                        existing_month[0].save()
 
-                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                    else:
+                        month_data = {
+                            "month": month,
+                            "days_checked": 1
+                        }
+
+                        month_serializer = MonthSerializer(data=month_data)
+
+                        if month_serializer.is_valid():
+                            month_serializer.save()
+
+                    date_serializer = DateSerializer(data=date)
+
+                    if date_serializer.is_valid():
+                        date_serializer.save()
+
+                        return Response(date_serializer.data, status=status.HTTP_201_CREATED)
+
+                    return Response(date_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
                 return Response(status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
@@ -71,7 +90,8 @@ def get_popular(request):
     Returns the ranking of months present in the database based on the number of
     days that have been checked
     """
-    months = Date.objects.all().values('month').annotate(days_checked=Count('id')).order_by('-days_checked')
+    # months = Date.objects.all().values('month').annotate(days_checked=Count('id')).order_by('-days_checked')
+    months = Month.objects.all().order_by('-days_checked')
     serializer = MonthSerializer(months, many=True)
 
     return Response(serializer.data)
@@ -80,14 +100,23 @@ def get_popular(request):
 @api_view(['DELETE'])
 def delete_date(request, pk):
     """
-    Delete a selected date
+    Deletes a selected date
     """
     if request.headers.get("X-API-KEY") == "SECRET_API_KEY":
         date = Date.objects.filter(id=pk)
         if not date:
             return Response(status=status.HTTP_404_NOT_FOUND)
         else:
-            date.delete()
+
+            month = Month.objects.all().filter(month=date[0].month)
+            if month:
+                month[0].days_checked -= 1
+                if month[0].days_checked == 0:
+                    month[0].delete()
+                else:
+                    month[0].save()
+            date[0].delete()
+
             return Response(status=status.HTTP_200_OK)
 
     return Response(status=status.HTTP_401_UNAUTHORIZED)

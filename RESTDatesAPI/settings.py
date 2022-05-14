@@ -91,6 +91,7 @@ DATABASES = {
         'PASSWORD': 'ng-rESTapi',
         'HOST': 'localhost',  # 'db' for Docker
         'PORT': 5432,
+        'CHARSET': 'UTF8',
     }
 }
 

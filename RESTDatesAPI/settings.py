@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-g_5s2xb+14n54j-%j%o&j(_16eqi%!u$xz%05r%$h84d1$ez_z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # CORS
 CORS_ORIGIN_ALLOW_ALL = True
@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'api',
     'dates',
     'rest_framework',
     'whitenoise.runserver_nostatic',
@@ -89,7 +88,7 @@ DATABASES = {
         'NAME': 'db',
         'USER': 'postgres',
         'PASSWORD': 'ng-rESTapi',
-        'HOST': 'localhost',  # 'db' for Docker
+        'HOST': 'localhost',  # 'db' for Docker; 'localhost' for local and heroku
         'PORT': 5432,
         'CHARSET': 'UTF8',
     }

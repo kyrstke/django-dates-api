@@ -21,5 +21,5 @@ import dates.views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('dates/', include('dates.urls')),
-    path('popular/', dates.views.get_popular),
+    path('popular/', dates.views.get_popular, name='popular'),
 ]

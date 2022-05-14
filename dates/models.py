@@ -24,6 +24,16 @@ class Date(models.Model):
         null=True
     )
 
+    def toDict(self):
+        date = {
+            "id": self.id,
+            "month": self.month,
+            "day": self.day,
+            "fact": self.fact,
+        }
+
+        return date
+
 
 class Month(models.Model):
 
@@ -40,4 +50,13 @@ class Month(models.Model):
             MinValueValidator(0)
         ]
     )
+
+    def toDict(self):
+        date = {
+            "id": self.id,
+            "month": self.month,
+            "days_checked": self.days_checked
+        }
+
+        return date
 

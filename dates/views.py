@@ -10,28 +10,27 @@ from .serializers import DateSerializer, MonthSerializer
 
 
 @api_view(['GET', 'POST'])
-def get_post_dates(request):
+def get_post_date(request):
     """
     GET: Returns the list of all dates
     POST: Fetches a fact for the date specified in request body from http://numbersapi.com/ and adds the date to the
     database
     """
     if request.method == 'GET':
-        possible_duplicate = Date.objects.all()
-        date_serializer = DateSerializer(possible_duplicate, many=True)
+        dates = Date.objects.all()
+        date_serializer = DateSerializer(dates, many=True)
 
         return Response(date_serializer.data)
 
     elif request.method == 'POST':
 
         # DATE
-        month_num = request.data['month']
-        day = request.data['day']
+        month_num = int(request.data['month'])
+        day = int(request.data['day'])
 
         # validate the numbers
         if month_num in range(1, 13) and day in range(1, 32):
             month = calendar.month_name[month_num]
-
             dates = Date.objects.all()
 
             # check if the date already exists in the database
@@ -42,9 +41,8 @@ def get_post_dates(request):
 
             if not possible_duplicate:
                 fact = requests.get(f'http://numbersapi.com/{month_num}/{day}/date')
-                fact_status = fact.status_code
 
-                if fact_status == 200:
+                if fact.status_code == 200:
                     date = {
                         "month": month,
                         "day": day,

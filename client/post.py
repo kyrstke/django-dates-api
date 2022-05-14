@@ -8,7 +8,7 @@ data = {
     "day": 19
 }
 
-get_response = requests.post(heroku_endpoint, json=data)
+get_response = requests.post(local_endpoint, json=data)
 get_response.raise_for_status()
 if get_response.status_code != 204:
     print(get_response.json())

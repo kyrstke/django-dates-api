@@ -12,8 +12,12 @@ I chose Django because:
 I chose PostgreSQL because:
 - it is the most preferred database for Django
 - it is one of the fastest growing database management systems, alongside its NoSQL brother MongoDB
+- it is scalable (unlike SQLite) so there will be no need to replace it if the project gets bigger
 - I wanted to learn it too
 - it is compatible with Heroku
+
+## Areas to improve
+- add Mock objects of external API responses to the tests
 
 ## Requirements
 [Docker](https://www.docker.com/get-docker)

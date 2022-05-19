@@ -34,7 +34,7 @@ CORS_ALLOW_CREDENTIALS = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'https://django-dates-api.herokuapp.com/'
+    'django-dates-api.herokuapp.com'
     ]
 
 # Application definition

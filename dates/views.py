@@ -17,10 +17,15 @@ def get_post_date(request):
     database
     """
     if request.method == 'GET':
-        dates = Date.objects.all()
-        date_serializer = DateSerializer(dates, many=True)
+        try:
+            dates = Date.objects.all()
+            date_serializer = DateSerializer(dates, many=True)
+            print(date_serializer.data)
 
-        return Response(date_serializer.data)
+            return Response(date_serializer.data)
+        except Exception as e:
+            print(e)
+            # return Response(status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
     elif request.method == 'POST':
 
@@ -118,7 +123,3 @@ def delete_date(request, pk):
             return Response(status=status.HTTP_200_OK)
 
     return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-
-
-

@@ -3,13 +3,11 @@ A simple Django REST API storing data in PostgreSQL database and interacting wit
 
 ## Technologies
 ### Why Django
-I chose Django because:
 - it has a perfect library for creating REST APIs - Django REST Framework
 - it has a large community and there are many great resources available on the Internet (documentation, tutorials, problems solved by other developers)
 - it is a framework I wanted to learn so it was a perfect opportunity to do this
 
 ### Why PostgreSQL
-I chose PostgreSQL because:
 - it is the most preferred database for Django
 - it is one of the fastest growing database management systems, alongside its NoSQL brother MongoDB
 - it is scalable (unlike SQLite) so there will be no need to replace it if the project gets bigger

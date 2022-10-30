@@ -1,5 +1,5 @@
 # Django-datesAPI
-A simple Django REST API storing data in PostgreSQL database and interacting with http://numbersapi.com. The API is deployed to Heroku at https://django-dates-api.herokuapp.com.
+A simple Django REST API storing data in PostgreSQL database and interacting with http://numbersapi.com. The API is deployed to Heroku at https://django-dates-api.herokuapp.com/dates/.
 
 ## Technologies
 ### Why Django
